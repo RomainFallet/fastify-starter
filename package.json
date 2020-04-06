@@ -1,0 +1,48 @@
+{
+  "name": "fastify-starter",
+  "version": "1.0.0",
+  "license": "UNLICENSED",
+  "repository": "git@github.com:RomainFallet/fastify-starter.git",
+  "scripts": {
+    "start": "nodemon ./src/index.js"
+  },
+  "lint-staged": {
+    "./**/*.{js,json}": [
+      "prettier --check"
+    ],
+    "./**/*.js": [
+      "eslint"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "dependencies": {
+    "axios": "~0.19.2",
+    "fastify": "~2.13.0",
+    "mongodb": "~3.5.5",
+    "mongoose": "~5.9.7"
+  },
+  "devDependencies": {
+    "axios-mock-adapter": "~1.18.1",
+    "eslint": "~6.8.0",
+    "eslint-config-prettier": "~6.10.1",
+    "eslint-config-prettier-standard": "~3.0.1",
+    "eslint-config-standard": "~14.1.1",
+    "eslint-plugin-import": "~2.20.2",
+    "eslint-plugin-node": "~11.0.0",
+    "eslint-plugin-prettier": "~3.1.2",
+    "eslint-plugin-promise": "~4.2.1",
+    "eslint-plugin-standard": "~4.0.1",
+    "husky": "~4.2.3",
+    "jest": "~25.2.7",
+    "lint-staged": "~10.1.2",
+    "mongodb-memory-server": "~6.5.2",
+    "nodemon": "~2.0.2",
+    "npm-check": "~5.9.2",
+    "prettier": "~2.0.4",
+    "prettier-config-standard": "~1.0.1"
+  }
+}

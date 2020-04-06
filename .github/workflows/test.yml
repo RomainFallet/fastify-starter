@@ -1,0 +1,14 @@
+name: Launch unit tests & functional tests
+
+on: ['pull_request']
+
+jobs:
+  test:
+    runs-on: ubuntu-18.04
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install dependencies
+      run: npm install
+    - name: Launch test with Jest
+      run: npx jest
