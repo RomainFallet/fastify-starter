@@ -10,10 +10,11 @@ On Windows, commands are meant to be executed on PowerShell.
 - [Manual configuration](#manual-configuration)
   - [Init the project](#init-the-project)
   - [Install app](#install-app)
-  - [Install testing utilities](#install-testing-utilities)
+  - [Install Jest testing utilities](#install-jest-testing-utilities)
   - [Install Prettier code formatter](#install-prettier-code-formatter)
   - [Install ESLint code linter with StandardJS rules](#install-eslint-code-linter-with-standardjs-rules)
-  - [Install dependencies checker](#install-dependencies-checker)
+  - [Install npm-check dependencies checker](#install-dependencies-checker)
+  - [Install dotenv-flow](#install-dotenv)
   - [Configure .gitignore](#configure-gitignore)
   - [Configure .editorconfig](#configure-editorconfig)
   - [Configure CI with Git hooks](#configure-ci-with-git-hooks)
@@ -85,19 +86,28 @@ Create a new "./package.json" file:
 Install packages:
 
 ```bash
-npm install fastify@~2.13.0 axios@~0.19.0 mongodb@~3.5.0 mongoose@~5.9.0
+npm install fastify@~2.13.0 axios@~0.19.0 mongodb@~3.5.0 mongoose@~5.9.0 dotenv-flow@~3.1.0
 npm install --save-dev nodemon@~2.0.0
 ```
 
 Create a new "./src/index.js" file:
 
 ```javascript
+require('dotenv-flow').config()
+const mongoose = require('mongoose')
 const app = require('./app')
 
-// Run the server!
 const start = async () => {
   try {
+    // Connect to the database
+    await mongoose.connect(process.env.MONGODB_URI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true
+    })
+
+    // Start the webserver
     await app.listen(3000)
+
     app.log.info(`server listening on ${app.server.address().port}`)
   } catch (err) {
     app.log.error(err)
@@ -124,7 +134,13 @@ app.get('/', async (request, res) => {
 module.exports = app
 ```
 
-### Install testing utilities
+Create a new file "./.env":
+
+```text
+MONGODB_URI=mongodb://<username>:<password>@localhost:27017/<database>
+```
+
+### Install Jest testing utilities
 
 [Back to top ↑](#table-of-contents)
 
