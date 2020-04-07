@@ -4,7 +4,8 @@
   "license": "UNLICENSED",
   "repository": "git@github.com:RomainFallet/fastify-starter.git",
   "scripts": {
-    "start": "nodemon ./src/index.js"
+    "start": "nodemon ./src/index.js",
+    "test": "jest"
   },
   "lint-staged": {
     "./**/*.{js,json}": [

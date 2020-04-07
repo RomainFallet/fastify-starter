@@ -343,10 +343,10 @@ npm start
 
 ```bash
 # One-time mode
-npx jest
+npm test
 
 # Watch mode
-npx jest --watch
+npm test -- --watch
 ```
 
 ### Check coding style & Lint code for errors/bad practices

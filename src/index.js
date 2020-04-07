@@ -1,10 +1,4 @@
-// Require the framework and instantiate it
-const fastify = require('fastify')({ logger: true })
-
-// Declare a route
-fastify.get('/', async (request, reply) => {
-  return { hello: 'world' }
-})
+const fastify = require('./app')
 
 // Run the server!
 const start = async () => {
@@ -16,4 +10,5 @@ const start = async () => {
     process.exit(1)
   }
 }
+
 start()
