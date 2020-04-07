@@ -3,14 +3,21 @@ name: Check coding style and lint code
 on: ['push', 'pull_request']
 
 jobs:
-  lint:
+  lint-json:
     runs-on: ubuntu-18.04
 
     steps:
     - uses: actions/checkout@v2
     - name: Install dependencies
       run: npm install
-    - name: JavaScript: check coding style and lint with ESLint (Prettier + StandardJS)
-      run: npx eslint "./**/*.js"
-    - name: JSON: check coding style with Prettier
-      run: npx prettier --check "./**/*.json"
+    - name: "JSON: check coding style with Prettier"
+      run: npm run lint:json
+  lint-js:
+    runs-on: ubuntu-18.04
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install dependencies
+      run: npm install
+    - name: "JavaScript: check coding style and lint with ESLint (Prettier + StandardJS)"
+      run: npm run lint:js

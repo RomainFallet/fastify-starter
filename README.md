@@ -9,7 +9,7 @@ On Windows, commands are meant to be executed on PowerShell.
 - [Quickstart](#quickstart)
 - [Manual configuration](#manual-configuration)
   - [Init the project](#init-the-project)
-  - [Install app packages](#install-app-packages)
+  - [Install app](#install-app)
   - [Install testing utilities](#install-testing-utilities)
   - [Install Prettier code formatter](#install-prettier-code-formatter)
   - [Install ESLint code linter with StandardJS rules](#install-eslint-code-linter-with-standardjs-rules)
@@ -21,9 +21,8 @@ On Windows, commands are meant to be executed on PowerShell.
 - [Usage](#usage)
   - [Launch app](#launch-app)
   - [Launch unit tests & functional tests](#launch-unit-tests--functional-tests)
-  - [Check coding style](#check-coding-style)
+  - [Check coding style & Lint code for errors/bad practices](#check-coding-style--lint-code-for-errorsbad-practices)
   - [Format code automatically](#format-code-automatically)
-  - [Lint code for errors/bad practices](#lint-code-for-errorsbad-practices)
   - [Audit & fix dependencies vulnerabilities](#audit--fix-dependencies-vulnerabilities)
   - [Check & upgrade outdated dependencies](#check--upgrade-outdated-dependencies)
 
@@ -37,116 +36,127 @@ git clone https://github.com/RomainFallet/fastify-starter
 
 ### Init the project
 
+[Back to top ↑](#table-of-contents)
+
+Define npm prefix:
+
 ```bash
-# Define npm prefix
 npm config set save-prefix='~'
-
-# Create ./package.json (MacOS & Ubuntu)
-echo '{
-  "name": "fastify-starter",
-  "version": "1.0.0",
-  "license": "UNLICENSED",
-  "repository": "git@github.com:RomainFallet/fastify-starter.git",
-  "scripts": {
-    "start": "nodemon ./src/index.js"
-  },
-  "lint-staged": {
-    "./**/*.{js,json}": [
-      "prettier --check"
-    ],
-    "./**/*.js": [
-      "eslint"
-    ]
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  }
-}' | tee ./package.json > /dev/null
-
-# Create ./package.json (Windows)
-Set-Content ./package.json '{
-  "name": "fastify-starter",
-  "version": "1.0.0",
-  "license": "UNLICENSED",
-  "repository": "git@github.com:RomainFallet/fastify-starter.git",
-  "scripts": {
-    "start": "nodemon ./src/index.js"
-  },
-  "lint-staged": {
-    "./**/*.{js,json}": [
-      "prettier --check"
-    ],
-    "./**/*.js": [
-      "eslint"
-    ]
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  }
-}'
 ```
 
-### Install app packages
+Create a new "./package.json" file:
+
+```json
+{
+  "name": "fastify-starter",
+  "version": "1.0.0",
+  "license": "UNLICENSED",
+  "repository": "git@github.com:RomainFallet/fastify-starter.git",
+  "scripts": {
+    "start": "nodemon ./src/index.js",
+    "test": "jest",
+    "deps:check": "npm-check",
+    "deps:upgrade": "npm-check -u",
+    "lint:json": "prettier --check \"./**/*.json\"",
+    "lint:js": "eslint \"./**/*.js\"",
+    "format:json": "prettier --write \"./**/*.json\"",
+    "format:js": "eslint --fix \"./**/*.js\""
+  },
+  "lint-staged": {
+    "./**/*.json": [
+      "prettier --check"
+    ],
+    "./**/*.js": [
+      "eslint"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  }
+}
+```
+
+### Install app
+
+[Back to top ↑](#table-of-contents)
+
+Install packages:
 
 ```bash
-# Install
 npm install fastify@~2.13.0 axios@~0.19.0 mongodb@~3.5.0 mongoose@~5.9.0
 npm install --save-dev nodemon@~2.0.0
+```
 
-# Configuration (MacOS & Ubuntu)
-mkdir ./src
-echo "// Require the framework and instantiate it
-const fastify = require('fastify')({ logger: true })
+Create a new "./src/index.js" file:
 
-// Declare a route
-fastify.get('/', async (request, reply) => {
-  return { hello: 'world' }
-})
+```javascript
+const app = require('./app')
 
 // Run the server!
 const start = async () => {
   try {
-    await fastify.listen(3000)
-    fastify.log.info(\`server listening on \${fastify.server.address().port}\`)
+    await app.listen(3000)
+    app.log.info(`server listening on ${app.server.address().port}`)
   } catch (err) {
-    fastify.log.error(err)
+    app.log.error(err)
     process.exit(1)
   }
 }
-start()" | tee ./src/index.js > /dev/null
 
-# Congiguration (Windows)
-Set-Content ./src/index.js "// Require the framework and instantiate it
-const fastify = require('fastify')({ logger: true })
+start()
+```
+
+Create a new file "./src/app.js":
+
+```javascript
+// Require the framework and instantiate it
+const app = require('fastify')({
+  logger: process.env.NODE_ENV === 'prod '
+})
 
 // Declare a route
-fastify.get('/', async (request, reply) => {
+app.get('/', async (request, res) => {
   return { hello: 'world' }
 })
 
-// Run the server!
-const start = async () => {
-  try {
-    await fastify.listen(3000)
-    fastify.log.info(\`server listening on \${fastify.server.address().port}\`)
-  } catch (err) {
-    fastify.log.error(err)
-    process.exit(1)
-  }
-}
-start()"
+module.exports = app
 ```
 
 ### Install testing utilities
 
 [Back to top ↑](#table-of-contents)
 
+Install packages:
+
 ```bash
 npm install --save-dev jest@~25.2.0 axios-mock-adapter@~1.18.0 mongodb-memory-server@~6.5.0
+```
+
+Create a new "./src/app.test.js" file:
+
+```javascript
+const app = require('./app')
+
+describe('action GET /', () => {
+  it('responds 200 with hello world', async () => {
+    // Arrange
+    expect.assertions(2)
+
+    // Act
+    const res = await app.inject({
+      method: 'GET',
+      url: '/'
+    })
+
+    // Assert
+    expect(res.statusCode).toBe(200)
+    expect(res.json()).toStrictEqual({
+      hello: 'world'
+    })
+  })
+})
 ```
 
 ### Install Prettier code formatter
@@ -162,27 +172,21 @@ npm install --save-dev prettier@~2.0.0 eslint-plugin-prettier@~3.1.0 eslint-conf
 [Back to top ↑](#table-of-contents)
 
 ```bash
-# Install
-npm install --save-dev eslint@~6.8.0 eslint-plugin-standard@~4.0.0 eslint-plugin-promise@~4.2.0 eslint-plugin-import@~2.20.0 eslint-plugin-node@~11.0.0 eslint-config-standard@~14.1.0
+npm install --save-dev eslint@~6.8.0 eslint-plugin-standard@~4.0.0 eslint-plugin-promise@~4.2.0 eslint-plugin-import@~2.20.0 eslint-plugin-node@~11.0.0 eslint-config-standard@~14.1.0 eslint-plugin-jest@~23.8.0
+```
 
-# Configuration (MacOS & Ubuntu)
-echo '{
-  "extends": [
-    "standard",
-    "prettier-standard"
-  ]
-}' | tee ./.eslintrc.json > /dev/null
+Create a new "./.eslintrc.json" file:
 
-# Configuration (Windows)
-Set-Content ./.eslintrc.json '{
-  "extends": [
-    "standard",
-    "prettier-standard"
-  ]
-}'
+```json
+{
+  "extends": ["plugin:jest/all", "standard", "prettier-standard"],
+  "plugins": ["jest"]
+}
 ```
 
 ### Install dependencies checker
+
+[Back to top ↑](#table-of-contents)
 
 ```bash
 npm install --save-dev npm-check@~5.9.0
@@ -192,35 +196,27 @@ npm install --save-dev npm-check@~5.9.0
 
 [Back to top ↑](#table-of-contents)
 
+Create a new "./.gitignore" file:
+
 ```bash
-# Configuration (MacOS & Ubuntu)
-echo "# OS Specific
+# OS Specific
 .DS_Store
 
 # Dependencies
 node_modules
 
 # Environment
-.env.local" | tee ./.gitignore > /dev/null
-
-# Configuration (Windows)
-Add-Content ./.gitignore "# OS Specific
-.DS_Store
-
-# Dependencies
-node_modules
-
-# Environment
-.env.local"
+.env.local
 ```
 
 ### Configure .editorconfig
 
 [Back to top ↑](#table-of-contents)
 
+Create a new "./.editorconfig " file:
+
 ```bash
-# Configuration (MacOS & Ubuntu)
-echo "# EditorConfig is awesome: https://EditorConfig.org
+# EditorConfig is awesome: https://EditorConfig.org
 root = true
 
 [*]
@@ -229,19 +225,7 @@ insert_final_newline = true
 charset = utf-8
 indent_style = space
 indent_size = 2
-trim_trailing_whitespace = true" | tee ./.editorconfig > /dev/null
-
-# Configuration (Windows)
-Set-Content ./.editorconfig "# EditorConfig is awesome: https://EditorConfig.org
-root = true
-
-[*]
-end_of_line = lf
-insert_final_newline = true
-charset = utf-8
-indent_style = space
-indent_size = 2
-trim_trailing_whitespace = true"
+trim_trailing_whitespace = true
 ```
 
 ### Configure CI with Git hooks
@@ -256,46 +240,38 @@ npm install --save-dev husky@~4.2.0 lint-staged@~10.1.0
 
 [Back to top ↑](#table-of-contents)
 
-```bash
-# Lint configuration (MacOS & Ubuntu)
-mkdir -p ./.github/workflows
-echo "name: Check coding style and lint code
+Create a new "./.github/workflows/lint.yml" file:
+
+```yaml
+name: Check coding style and lint code
 
 on: ['push', 'pull_request']
 
 jobs:
-  lint:
+  lint-json:
     runs-on: ubuntu-18.04
 
     steps:
     - uses: actions/checkout@v2
     - name: Install dependencies
       run: npm install
-    - name: JavaScript: check coding style and lint with ESLint (Prettier + StandardJS)
-      run: npx eslint \"./**/*.js\"
-    - name: JSON: check coding style with Prettier
-      run: npx prettier --check \"./**/*.json\"" | tee ./.github/workflows/lint.yml > /dev/null
-
-# Lint configuration (Windows)
-Set-Content ./.github/workflows/lint.yml "name: Check coding style and lint code
-
-on: ['push', 'pull_request']
-
-jobs:
-  lint:
+    - name: "JSON: check coding style with Prettier"
+      run: npm run lint:json
+  lint-js:
     runs-on: ubuntu-18.04
 
     steps:
     - uses: actions/checkout@v2
     - name: Install dependencies
       run: npm install
-    - name: JavaScript: check coding style and lint with ESLint (Prettier + StandardJS)
-      run: npx eslint \"./**/*.js\"
-    - name: JSON: check coding style with Prettier
-      run: npx prettier --check \"./**/*.json\""
+    - name: "JavaScript: check coding style and lint with ESLint (Prettier + StandardJS)"
+      run: npm run lint:js
+```
 
-# Test configuration (MacOS & Ubuntu)
-echo "name: Launch unit tests & functional tests
+Create a new "./.github/workflows/test.yml" file:
+
+```yaml
+name: Launch unit tests & functional tests
 
 on: ['pull_request']
 
@@ -308,23 +284,7 @@ jobs:
     - name: Install dependencies
       run: npm install
     - name: Launch test with Jest
-      run: npx jest" | tee ./.github/workflows/test.yml > /dev/null
-
-# Test configuration (Windows)
-Set-Content ./.github/workflows/test.yml "name: Launch unit tests & functional tests
-
-on: ['pull_request']
-
-jobs:
-  test:
-    runs-on: ubuntu-18.04
-
-    steps:
-    - uses: actions/checkout@v2
-    - name: Install dependencies
-      run: npm install
-    - name: Launch test with Jest
-      run: npx jest"
+      run: npm run test
 ```
 
 ## Usage
@@ -355,10 +315,10 @@ npm test -- --watch
 
 ```bash
 # Check JavaScript with ESLint (Prettier + StandardJS)
-npx eslint "./**/*.js"
+npm run lint:js
 
 # Check JSON with Prettier
-npx prettier --check "./**/*.json"
+npm run lint:json
 ```
 
 ### Format code automatically
@@ -367,10 +327,10 @@ npx prettier --check "./**/*.json"
 
 ```bash
 # Format JavaScript with ESLint (Prettier + StandardJS)
-npx eslint --fix "./**/*.js"
+npm run format:js
 
 # Format JSON with Prettier
-npx prettier --write "./**/*.json"
+npm run format:json
 ```
 
 ### Audit & fix dependencies vulnerabilities
@@ -391,8 +351,8 @@ npm update
 
 ```bash
 # Check for unused/outdated dependencies
-npx npm-check
+npm run deps:check
 
 # Choose interactively which dependency to upgrade
-npx npm-check -u
+npm run deps:upgrade
 ```

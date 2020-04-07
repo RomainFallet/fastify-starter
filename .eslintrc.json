@@ -1,13 +1,4 @@
 {
-  "extends": ["standard", "prettier-standard"],
-  "overrides": [
-    {
-      "files": [
-        "**/*.test.js"
-      ],
-      "env": {
-        "jest": true
-      }
-    }
-  ]
+  "extends": ["plugin:jest/all", "standard", "prettier-standard"],
+  "plugins": ["jest"]
 }

@@ -1,9 +1,11 @@
 // Require the framework and instantiate it
-const fastify = require('fastify')({ logger: true })
+const app = require('fastify')({
+  logger: process.env.NODE_ENV === 'prod '
+})
 
 // Declare a route
-fastify.get('/', async (request, reply) => {
+app.get('/', async (request, res) => {
   return { hello: 'world' }
 })
 
-module.exports = fastify
+module.exports = app

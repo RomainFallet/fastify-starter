@@ -5,10 +5,16 @@
   "repository": "git@github.com:RomainFallet/fastify-starter.git",
   "scripts": {
     "start": "nodemon ./src/index.js",
-    "test": "jest"
+    "test": "jest",
+    "deps:check": "npm-check",
+    "deps:upgrade": "npm-check -u",
+    "lint:json": "prettier --check \"./**/*.json\"",
+    "lint:js": "eslint \"./**/*.js\"",
+    "format:json": "prettier --write \"./**/*.json\"",
+    "format:js": "eslint --fix \"./**/*.js\""
   },
   "lint-staged": {
-    "./**/*.{js,json}": [
+    "./**/*.json": [
       "prettier --check"
     ],
     "./**/*.js": [
@@ -33,6 +39,7 @@
     "eslint-config-prettier-standard": "~3.0.1",
     "eslint-config-standard": "~14.1.1",
     "eslint-plugin-import": "~2.20.2",
+    "eslint-plugin-jest": "~23.8.2",
     "eslint-plugin-node": "~11.0.0",
     "eslint-plugin-prettier": "~3.1.2",
     "eslint-plugin-promise": "~4.2.1",

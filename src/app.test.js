@@ -1,14 +1,19 @@
-const fastify = require('./app')
+const app = require('./app')
 
-describe('GET /', () => {
+describe('action GET /', () => {
   it('responds 200 with hello world', async () => {
-    const res = await fastify.inject({
+    // Arrange
+    expect.assertions(2)
+
+    // Act
+    const res = await app.inject({
       method: 'GET',
       url: '/'
     })
 
+    // Assert
     expect(res.statusCode).toBe(200)
-    expect(res.json()).toEqual({
+    expect(res.json()).toStrictEqual({
       hello: 'world'
     })
   })
