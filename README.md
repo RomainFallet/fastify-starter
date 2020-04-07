@@ -274,10 +274,10 @@ jobs:
     - name: JavaScript: check coding style and lint with ESLint (Prettier + StandardJS)
       run: npx eslint \"./**/*.js\"
     - name: JSON: check coding style with Prettier
-      run: npx prettier --check \"./**/*.json\"" | tee ./.github/workflows/check-lint.yml > /dev/null
+      run: npx prettier --check \"./**/*.json\"" | tee ./.github/workflows/lint.yml > /dev/null
 
 # Lint configuration (Windows)
-Set-Content ./.github/workflows/check-lint.yml "name: Check coding style and lint code
+Set-Content ./.github/workflows/lint.yml "name: Check coding style and lint code
 
 on: ['push', 'pull_request']
 
