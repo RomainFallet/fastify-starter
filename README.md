@@ -381,7 +381,7 @@ npx prettier --write "./**/*.json"
 # Check for known vulnerabilities in dependencies
 npm audit
 
-# Install latest patches of all dependences
+# Install latest patches of all dependencies
 npm update
 ```
 
