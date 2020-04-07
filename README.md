@@ -108,7 +108,7 @@ const start = async () => {
 start()
 ```
 
-Create a new file "./src/app.js":
+Create a new file "./src/routes/app.js":
 
 ```javascript
 // Require the framework and instantiate it
@@ -134,7 +134,7 @@ Install packages:
 npm install --save-dev jest@~25.2.0 axios-mock-adapter@~1.18.0 mongodb-memory-server@~6.5.0
 ```
 
-Create a new "./src/app.test.js" file:
+Create a new "./src/routes/app.test.js" file:
 
 ```javascript
 const app = require('./app')
