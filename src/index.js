@@ -1,6 +1,8 @@
 require('dotenv-flow').config()
 const mongoose = require('mongoose')
-const app = require('./app')
+const app = require('fastify')({
+  logger: true
+})
 
 const start = async () => {
   try {
@@ -9,6 +11,9 @@ const start = async () => {
       useNewUrlParser: true,
       useUnifiedTopology: true
     })
+
+    // Register routes
+    app.register(require('./routes/cats'))
 
     // Start the webserver
     await app.listen(3000)

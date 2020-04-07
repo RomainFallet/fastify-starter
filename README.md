@@ -86,7 +86,10 @@ Create a new "./package.json" file:
 Install packages:
 
 ```bash
+# Dependencies
 npm install fastify@~2.13.0 axios@~0.19.0 mongodb@~3.5.0 mongoose@~5.9.0 dotenv-flow@~3.1.0
+
+# Dev dependencies
 npm install --save-dev nodemon@~2.0.0
 ```
 
@@ -95,7 +98,9 @@ Create a new "./src/index.js" file:
 ```javascript
 require('dotenv-flow').config()
 const mongoose = require('mongoose')
-const app = require('./app')
+const app = require('fastify')({
+  logger: true
+})
 
 const start = async () => {
   try {
@@ -104,6 +109,9 @@ const start = async () => {
       useNewUrlParser: true,
       useUnifiedTopology: true
     })
+
+    // Register routes
+    app.register(require('./routes/cats'))
 
     // Start the webserver
     await app.listen(3000)
@@ -118,20 +126,35 @@ const start = async () => {
 start()
 ```
 
-Create a new file "./src/routes/app.js":
+Create a new file "./src/routes/cats.js":
 
 ```javascript
-// Require the framework and instantiate it
-const app = require('fastify')({
-  logger: process.env.NODE_ENV === 'prod '
+const Cat = require('../models/cat')
+
+module.exports = async app => {
+  app.get('/cats', async () => {
+    const cats = await Cat.find({})
+    return cats.map(cat => cat.toJSON())
+  })
+
+  app.post('/cats', async (req, res) => {
+    await Cat.create(req.body)
+    res.status(204)
+  })
+}
+```
+
+Create a new file "./src/models/cat.js":
+
+```javascript
+const mongoose = require('mongoose')
+
+const schema = new mongoose.Schema({
+  name: String,
+  color: String
 })
 
-// Declare a route
-app.get('/', async (request, res) => {
-  return { hello: 'world' }
-})
-
-module.exports = app
+module.exports = mongoose.model('Cat', schema)
 ```
 
 Create a new file "./.env":
@@ -150,26 +173,104 @@ Install packages:
 npm install --save-dev jest@~25.2.0 axios-mock-adapter@~1.18.0 mongodb-memory-server@~6.5.0
 ```
 
-Create a new "./src/routes/app.test.js" file:
+Create a new "./jest.config.js" file:
 
 ```javascript
-const app = require('./app')
+module.exports = {
+  testEnvironment: 'node'
+}
+```
 
-describe('action GET /', () => {
-  it('responds 200 with hello world', async () => {
-    // Arrange
-    expect.assertions(2)
+Create a new "./src/helpers/test-utils.js":
 
-    // Act
-    const res = await app.inject({
-      method: 'GET',
-      url: '/'
+```javascript
+const { MongoMemoryServer } = require('mongodb-memory-server')
+const mongoose = require('mongoose')
+
+const setupMongo = async () => {
+  const mongoServer = new MongoMemoryServer()
+  await mongoose.connect(await mongoServer.getUri(), {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+  })
+  return mongoServer
+}
+const cleanMongo = async mongoServer => {
+  await mongoose.disconnect()
+  await mongoServer.stop()
+}
+
+module.exports = { setupMongo, cleanMongo }
+```
+
+Create a new "./src/routes/cat.test.js" file:
+
+```javascript
+const app = require('fastify')()
+const { setupMongo, cleanMongo } = require('../helpers/test-utils')
+const Cat = require('../models/cat')
+const mongoose = require('mongoose')
+
+describe('/cats', () => {
+  let mongoServer
+  beforeAll(async () => {
+    app.register(require('./cats'))
+    mongoServer = await setupMongo()
+  })
+
+  afterAll(async () => {
+    await cleanMongo(mongoServer)
+    await app.close()
+  })
+
+  describe('GET /cats', () => {
+    it('responds 200 and return cats', async () => {
+      // Arrange
+      expect.assertions(2)
+      await Cat.remove({})
+      await Cat.create({ name: 'Meow', color: 'dark' })
+
+      // Act
+      const res = await app.inject({
+        method: 'GET',
+        url: '/cats'
+      })
+
+      // Assert
+      expect(res.statusCode).toBe(200)
+      expect(res.json()).toStrictEqual([
+        {
+          _id: expect.any(String),
+          __v: 0,
+          name: 'Meow',
+          color: 'dark'
+        }
+      ])
     })
+  })
 
-    // Assert
-    expect(res.statusCode).toBe(200)
-    expect(res.json()).toStrictEqual({
-      hello: 'world'
+  describe('POST /cats', () => {
+    it('responds 204 and save cat', async () => {
+      // Arrange
+      expect.assertions(3)
+      await Cat.remove({})
+
+      // Act
+      const res = await app.inject({
+        method: 'POST',
+        url: '/cats',
+        body: { name: 'Meow', color: 'dark' }
+      })
+
+      // Assert
+      expect(res.statusCode).toBe(204)
+      expect(res.body).toBe('')
+      expect((await Cat.findOne({ name: 'Meow' })).toObject()).toStrictEqual({
+        _id: expect.any(mongoose.Types.ObjectId),
+        __v: 0,
+        color: 'dark',
+        name: 'Meow'
+      })
     })
   })
 })
@@ -188,7 +289,7 @@ npm install --save-dev prettier@~2.0.0 eslint-plugin-prettier@~3.1.0 eslint-conf
 [Back to top ↑](#table-of-contents)
 
 ```bash
-npm install --save-dev eslint@~6.8.0 eslint-plugin-standard@~4.0.0 eslint-plugin-promise@~4.2.0 eslint-plugin-import@~2.20.0 eslint-plugin-node@~11.0.0 eslint-config-standard@~14.1.0 eslint-plugin-jest@~23.8.0
+npm install --save-dev eslint@~6.8.0 eslint-plugin-standard@~4.0.0 eslint-plugin-promise@~4.2.0 eslint-plugin-import@~2.20.0 eslint-plugin-node@~11.1.0 eslint-config-standard@~14.1.0 eslint-plugin-jest@~23.8.0
 ```
 
 Create a new "./.eslintrc.json" file:
@@ -196,7 +297,16 @@ Create a new "./.eslintrc.json" file:
 ```json
 {
   "extends": ["plugin:jest/all", "standard", "prettier-standard"],
-  "plugins": ["jest"]
+  "plugins": ["jest"],
+  "rules": {
+    "jest/lowercase-name": [
+      "error",
+      {
+        "allowedPrefixes": ["GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS"]
+      }
+    ],
+    "jest/no-hooks": 0
+  }
 }
 ```
 
@@ -300,7 +410,7 @@ jobs:
     - name: Install dependencies
       run: npm install
     - name: Launch test with Jest
-      run: npm run test
+      run: npm test
 ```
 
 ## Usage
