@@ -511,6 +511,9 @@ Then, create a new "./.vscode/settings.json" file:
   "[json]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
+  "[yaml]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
   "prettier.disableLanguages": ["javascript", "markdown"]
 }
 ```
