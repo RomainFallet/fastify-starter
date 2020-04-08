@@ -470,6 +470,8 @@ jobs:
 
 ### Integrate formatter & linter to VSCode
 
+[Back to top ↑](#table-of-contents)
+
 Create a new "./.vscode/extensions.json" file:
 
 ```json
