@@ -76,8 +76,18 @@ Create a new "./package.json" file:
     "format:yml": "prettier --write \"./**/*.yml\""
   },
   "lint-staged": {
-    "./**/*.json": ["prettier --check"],
-    "./**/*.js": ["eslint"]
+    "./**/*.json": [
+      "prettier --check"
+    ],
+    "./**/*.js": [
+      "eslint"
+    ],
+    "./**/*.yml": [
+      "prettier --check"
+    ],
+    "./**/*.md": [
+      "markdownlint --ignore ./node_modules"
+    ]
   },
   "husky": {
     "hooks": {

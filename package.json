@@ -26,6 +26,12 @@
     ],
     "./**/*.js": [
       "eslint"
+    ],
+    "./**/*.yml": [
+      "prettier --check"
+    ],
+    "./**/*.md": [
+      "markdownlint --ignore ./node_modules"
     ]
   },
   "husky": {
