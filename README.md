@@ -59,8 +59,10 @@ Create a new "./package.json" file:
     "test:all": "jest --all",
     "deps:check": "npm-check",
     "deps:upgrade": "npm-check -u",
+    "lint": "npm-run-all lint:*",
     "lint:json": "prettier --check \"./**/*.json\"",
     "lint:js": "eslint \"./**/*.js\"",
+    "format": "npm-run-all format:*",
     "format:json": "prettier --write \"./**/*.json\"",
     "format:js": "eslint --fix \"./**/*.js\""
   },
@@ -91,7 +93,7 @@ Install packages:
 npm install fastify@~2.13.0 axios@~0.19.0 mongodb@~3.5.0 mongoose@~5.9.0 dotenv-flow@~3.1.0
 
 # Dev dependencies
-npm install --save-dev nodemon@~2.0.0
+npm install --save-dev nodemon@~2.0.0 npm-run-all@~4.1.5
 ```
 
 Create a new "./src/index.js" file:
@@ -375,24 +377,15 @@ name: Check coding style and lint code
 on: ['push', 'pull_request']
 
 jobs:
-  lint-json:
+  lint:
     runs-on: ubuntu-18.04
 
     steps:
     - uses: actions/checkout@v2
     - name: Install dependencies
       run: npm install
-    - name: "JSON: check coding style with Prettier"
-      run: npm run lint:json
-  lint-js:
-    runs-on: ubuntu-18.04
-
-    steps:
-    - uses: actions/checkout@v2
-    - name: Install dependencies
-      run: npm install
-    - name: "JavaScript: check coding style and lint with ESLint (Prettier + StandardJS)"
-      run: npm run lint:js
+    - name: Check coding style and lint code
+      run: npm run lint
 ```
 
 Create a new "./.github/workflows/test.yml" file:
@@ -441,6 +434,9 @@ npm test:all
 [Back to top ↑](#table-of-contents)
 
 ```bash
+# Check all files
+npm run lint
+
 # Check JavaScript with ESLint (Prettier + StandardJS)
 npm run lint:js
 
@@ -453,6 +449,9 @@ npm run lint:json
 [Back to top ↑](#table-of-contents)
 
 ```bash
+# Check all files
+npm run format
+
 # Format JavaScript with ESLint (Prettier + StandardJS)
 npm run format:js
 
