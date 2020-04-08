@@ -13,6 +13,7 @@ On Windows, commands are meant to be executed on PowerShell.
   - [Install Jest testing utilities](#install-jest-testing-utilities)
   - [Install Prettier code formatter](#install-prettier-code-formatter)
   - [Install ESLint code linter with StandardJS rules](#install-eslint-code-linter-with-standardjs-rules)
+  - [Install MarkdownLint](#install-markdown-lint)
   - [Install npm-check dependencies checker](#install-dependencies-checker)
   - [Install dotenv-flow](#install-dotenv)
   - [Configure .gitignore](#configure-gitignore)
@@ -22,7 +23,7 @@ On Windows, commands are meant to be executed on PowerShell.
   - [Integrate formatter & linter to VSCode](#integrate-formatter--linter-to-vscode)
 - [Usage](#usage)
   - [Launch app](#launch-app)
-  - [Launch unit tests & functional tests](#launch-unit-tests--functional-tests)
+  - [Launch unit tests](#launch-unit-tests)
   - [Check coding style & Lint code for errors/bad practices](#check-coding-style--lint-code-for-errorsbad-practices)
   - [Format code automatically](#format-code-automatically)
   - [Audit & fix dependencies vulnerabilities](#audit--fix-dependencies-vulnerabilities)
@@ -460,7 +461,7 @@ This will format automatically the code on save.
 npm start
 ```
 
-### Launch unit tests & functional tests
+### Launch unit tests
 
 [Back to top ↑](#table-of-contents)
 
