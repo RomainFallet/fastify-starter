@@ -382,6 +382,14 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+    - name: Cache node modules
+      uses: actions/cache@v1
+      env:
+        cache-name: cache-node-modules
+      with:
+        path: ./node_modules
+        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('./package-lock.json') }}
+        restore-keys: ${{ runner.os }}-build-${{ env.cache-name }}-
     - name: Install dependencies
       run: npm install
     - name: Check coding style and lint code
@@ -401,6 +409,14 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+    - name: Cache node modules
+      uses: actions/cache@v1
+      env:
+        cache-name: cache-node-modules
+      with:
+        path: ./node_modules
+        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('./package-lock.json') }}
+        restore-keys: ${{ runner.os }}-build-${{ env.cache-name }}-
     - name: Install dependencies
       run: npm install
     - name: Launch test with Jest
