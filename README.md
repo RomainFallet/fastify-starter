@@ -23,7 +23,7 @@ On Windows, commands are meant to be executed on PowerShell.
   - [Configure .editorconfig](#configure-editorconfig)
   - [Configure CI with Git hooks](#configure-ci-with-git-hooks)
   - [Configure CI with GitHub Actions](#configure-ci-with-github-actions)
-  - [Integrate formatter & linter to VSCode](#integrate-formatter--linter-to-vscode)
+  - [Integrate formatters, linters & syntax to VSCode](#integrate-formatter--linter-to-vscode)
 - [Usage](#usage)
   - [Launch app](#launch-app)
   - [Launch unit tests](#launch-unit-tests)
@@ -464,13 +464,26 @@ Create a new "./.vscode/extensions.json" file:
 
 ```json
 {
-  "recommendations": ["dbaeumer.vscode-eslint", "esbenp.prettier-vscode"]
+  "recommendations": [
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "davidanson.vscode-markdownlint",
+    "me-dutour-mathieu.vscode-github-actions",
+    "mikestead.dotenv",
+    "editorconfig.editorconfig",
+    "eg2.vscode-npm-script"
+  ]
 }
 ```
 
 This will suggest to install
-[Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
-and [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
+[npm](https://marketplace.visualstudio.com/items?itemName=eg2.vscode-npm-script),
+[Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode),
+[ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint),
+[MarkdownLint](https://marketplace.visualstudio.com/items?itemName=DavidAnson.vscode-markdownlint),
+[Github Actions](https://marketplace.visualstudio.com/items?itemName=me-dutour-mathieu.vscode-github-actions),
+[DotENV](https://marketplace.visualstudio.com/items?itemName=mikestead.dotenv)
+and [EditorConfig](https://marketplace.visualstudio.com/items?itemName=EditorConfig.EditorConfig)
 extensions to everybody opening this project in VSCode.
 
 Then, create a new "./.vscode/settings.json" file:
@@ -479,13 +492,14 @@ Then, create a new "./.vscode/settings.json" file:
 {
   "eslint.enable": true,
   "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": true
+    "source.fixAll.eslint": true,
+    "source.fixAll.markdownlint": true
   },
   "editor.formatOnSave": true,
   "[json]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  "prettier.disableLanguages": ["javascript"]
+  "prettier.disableLanguages": ["javascript", "markdown"]
 }
 ```
 

@@ -1,3 +1,11 @@
 {
-  "recommendations": ["dbaeumer.vscode-eslint", "esbenp.prettier-vscode"]
+  "recommendations": [
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "davidanson.vscode-markdownlint",
+    "me-dutour-mathieu.vscode-github-actions",
+    "mikestead.dotenv",
+    "editorconfig.editorconfig",
+    "eg2.vscode-npm-script"
+  ]
 }

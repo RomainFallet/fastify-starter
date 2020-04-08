@@ -1,11 +1,12 @@
 {
   "eslint.enable": true,
   "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": true
+    "source.fixAll.eslint": true,
+    "source.fixAll.markdownlint": true
   },
   "editor.formatOnSave": true,
   "[json]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  "prettier.disableLanguages": ["javascript"]
+  "prettier.disableLanguages": ["javascript", "markdown"]
 }
