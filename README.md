@@ -540,6 +540,12 @@ npm run lint:js
 
 # Check JSON with Prettier
 npm run lint:json
+
+# Check YAML with Prettier
+npm run lint:yml
+
+# Check Mardkown with MarkdownLint
+npm run lint:md
 ```
 
 ### Format code automatically
@@ -555,6 +561,12 @@ npm run format:js
 
 # Format JSON with Prettier
 npm run format:json
+
+# Format YAML with Prettier
+npm run lint:yml
+
+# Format Mardkown with MarkdownLint
+npm run lint:md
 ```
 
 ### Audit & fix dependencies vulnerabilities
