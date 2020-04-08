@@ -468,7 +468,7 @@ jobs:
         run: npm run test:all
 ```
 
-### Integrate formatter & linter to VSCode
+### Integrate formatters, linters & syntax to VSCode
 
 [Back to top ↑](#table-of-contents)
 
