@@ -404,7 +404,7 @@ jobs:
     - name: Install dependencies
       run: npm install
     - name: Launch test with Jest
-      run: npm test
+      run: npm run test:all
 ```
 
 ## Usage
