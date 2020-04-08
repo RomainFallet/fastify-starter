@@ -230,7 +230,7 @@ describe('/cats', () => {
     it('responds 200 and return cats', async () => {
       // Arrange
       expect.assertions(2)
-      await Cat.remove({})
+      await Cat.deleteMany({})
       await Cat.create({ name: 'Meow', color: 'dark' })
 
       // Act
@@ -256,7 +256,7 @@ describe('/cats', () => {
     it('responds 204 and save cat', async () => {
       // Arrange
       expect.assertions(3)
-      await Cat.remove({})
+      await Cat.deleteMany({})
 
       // Act
       const res = await app.inject({
