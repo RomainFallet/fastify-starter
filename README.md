@@ -1,6 +1,9 @@
 # Fastify starter
 
-The purpose of this repository is to provide instructions to create and configure a new [Fastify](https://www.fastify.io/) app from scratch with appropriate linters, editor config, testing utilities, continuous integration on Ubuntu, macOS and Windows.
+The purpose of this repository is to provide instructions to create
+and configure a new [Fastify](https://www.fastify.io/) app from scratch
+with appropriate linters, editor config, testing utilities,
+continuous integration on Ubuntu, macOS and Windows.
 
 On Windows, commands are meant to be executed on PowerShell.
 
@@ -13,7 +16,7 @@ On Windows, commands are meant to be executed on PowerShell.
   - [Install Jest testing utilities](#install-jest-testing-utilities)
   - [Install Prettier code formatter](#install-prettier-code-formatter)
   - [Install ESLint code linter with StandardJS rules](#install-eslint-code-linter-with-standardjs-rules)
-  - [Install MarkdownLint](#install-markdown-lint)
+  - [Install MarkdownLint](#install-markdownlint)
   - [Install npm-check dependencies checker](#install-dependencies-checker)
   - [Install dotenv-flow](#install-dotenv)
   - [Configure .gitignore](#configure-gitignore)
@@ -62,11 +65,15 @@ Create a new "./package.json" file:
     "deps:check": "npm-check",
     "deps:upgrade": "npm-check -u",
     "lint": "npm-run-all lint:*",
-    "lint:json": "prettier --check \"./**/*.json\"",
     "lint:js": "eslint \"./**/*.js\"",
+    "lint:json": "prettier --check \"./**/*.json\"",
+    "lint:md": "markdownlint \"./**/*.md\" --ignore ./node_modules",
+    "lint:yml": "prettier --check \"./**/*.yml\"",
     "format": "npm-run-all format:*",
     "format:json": "prettier --write \"./**/*.json\"",
-    "format:js": "eslint --fix \"./**/*.js\""
+    "format:js": "eslint --fix \"./**/*.js\"",
+    "format:md": "markdownlint --fix \"./**/*.md\" --ignore ./node_modules",
+    "format:yml": "prettier --write \"./**/*.yml\""
   },
   "lint-staged": {
     "./**/*.json": ["prettier --check"],
@@ -282,7 +289,11 @@ describe("/cats", () => {
 [Back to top ↑](#table-of-contents)
 
 ```bash
-npm install --save-dev prettier@~2.0.0 eslint-plugin-prettier@~3.1.0 eslint-config-prettier@~6.10.0 prettier-config-standard@~1.0.0 eslint-config-prettier-standard@~3.0.0
+# Install Prettier with StandardJS config
+npm i -D prettier@~2.0.0 prettier-config-standard@~1.0.0
+
+# Install configs for ESLint integration
+npm i -D eslint-plugin-prettier@~3.1.0 eslint-config-prettier@~6.10.0 eslint-config-prettier-standard@~3.0.0
 ```
 
 ### Install ESLint code linter with StandardJS rules
@@ -290,7 +301,17 @@ npm install --save-dev prettier@~2.0.0 eslint-plugin-prettier@~3.1.0 eslint-conf
 [Back to top ↑](#table-of-contents)
 
 ```bash
-npm install --save-dev eslint@~6.8.0 eslint-plugin-standard@~4.0.0 eslint-plugin-promise@~4.2.0 eslint-plugin-import@~2.20.0 eslint-plugin-node@~11.1.0 eslint-config-standard@~14.1.0 eslint-plugin-jest@~23.8.0
+# Install ESLint
+npm i -D eslint@~6.8.0
+
+# Install ESLint default plugins
+npm i -D eslint-plugin-promise@~4.2.0 eslint-plugin-import@~2.20.0 eslint-plugin-node@~11.1.0
+
+# Install StandardJS & Jest plugins
+npm i -D eslint-plugin-standard@~4.0.0 eslint-plugin-jest@~23.8.0
+
+# Install StandardJS config
+npm i -D eslint-config-standard@~14.1.0
 ```
 
 Create a new "./.eslintrc.json" file:
@@ -308,6 +329,22 @@ Create a new "./.eslintrc.json" file:
     ],
     "jest/no-hooks": 0
   }
+}
+```
+
+### Install MarkdownLint
+
+[Back to top ↑](#table-of-contents)
+
+```bash
+npm install --save-dev markdownlint@~0.19.0 markdownlint-cli@~0.22.0
+```
+
+Create a new "./.markdownlint.json" file:
+
+```json
+{
+  "default": true
 }
 ```
 
@@ -386,8 +423,8 @@ jobs:
           cache-name: cache-node-modules
         with:
           path: ./node_modules
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('./package-lock.json') }}
-          restore-keys: ${{ runner.os }}-build-${{ env.cache-name }}-
+          key: ${{ env.cache-name }}-${{ hashFiles('./package-lock.json') }}
+          restore-keys: ${{ env.cache-name }}-
       - name: Install dependencies
         run: npm install
       - name: Check coding style and lint code
@@ -413,8 +450,8 @@ jobs:
           cache-name: cache-node-modules
         with:
           path: ./node_modules
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('./package-lock.json') }}
-          restore-keys: ${{ runner.os }}-build-${{ env.cache-name }}-
+          key: ${{ env.cache-name }}-${{ hashFiles('./package-lock.json') }}
+          restore-keys: ${{ env.cache-name }}-
       - name: Install dependencies
         run: npm install
       - name: Launch test with Jest
@@ -431,7 +468,10 @@ Create a new "./.vscode/extensions.json" file:
 }
 ```
 
-This will suggest to install [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) and [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) extensions to everybody opening this project in VSCode.
+This will suggest to install
+[Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
+and [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
+extensions to everybody opening this project in VSCode.
 
 Then, create a new "./.vscode/settings.json" file:
 
