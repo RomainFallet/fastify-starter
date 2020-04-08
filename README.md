@@ -19,6 +19,7 @@ On Windows, commands are meant to be executed on PowerShell.
   - [Configure .editorconfig](#configure-editorconfig)
   - [Configure CI with Git hooks](#configure-ci-with-git-hooks)
   - [Configure CI with GitHub Actions](#configure-ci-with-github-actions)
+  - [Integrate formatter & linter to VSCode](#integrate-formatter--linter-to-vscode)
 - [Usage](#usage)
   - [Launch app](#launch-app)
   - [Launch unit tests & functional tests](#launch-unit-tests--functional-tests)
@@ -67,12 +68,8 @@ Create a new "./package.json" file:
     "format:js": "eslint --fix \"./**/*.js\""
   },
   "lint-staged": {
-    "./**/*.json": [
-      "prettier --check"
-    ],
-    "./**/*.js": [
-      "eslint"
-    ]
+    "./**/*.json": ["prettier --check"],
+    "./**/*.js": ["eslint"]
   },
   "husky": {
     "hooks": {
@@ -99,65 +96,65 @@ npm install --save-dev nodemon@~2.0.0 npm-run-all@~4.1.5
 Create a new "./src/index.js" file:
 
 ```javascript
-require('dotenv-flow').config()
-const mongoose = require('mongoose')
-const app = require('fastify')({
-  logger: true
-})
+require("dotenv-flow").config();
+const mongoose = require("mongoose");
+const app = require("fastify")({
+  logger: true,
+});
 
 const start = async () => {
   try {
     // Connect to the database
     await mongoose.connect(process.env.MONGODB_URI, {
       useNewUrlParser: true,
-      useUnifiedTopology: true
-    })
+      useUnifiedTopology: true,
+    });
 
     // Register routes
-    app.register(require('./routes/cats'))
+    app.register(require("./routes/cats"));
 
     // Start the webserver
-    await app.listen(3000)
+    await app.listen(3000);
 
-    app.log.info(`server listening on ${app.server.address().port}`)
+    app.log.info(`server listening on ${app.server.address().port}`);
   } catch (err) {
-    app.log.error(err)
-    process.exit(1)
+    app.log.error(err);
+    process.exit(1);
   }
-}
+};
 
-start()
+start();
 ```
 
 Create a new file "./src/routes/cats.js":
 
 ```javascript
-const Cat = require('../models/cat')
+const Cat = require("../models/cat");
 
-module.exports = async app => {
-  app.get('/cats', async () => {
-    const cats = await Cat.find({})
-    return cats.map(cat => cat.toJSON())
-  })
+module.exports = async (app) => {
+  app.get("/cats", async () => {
+    const cats = await Cat.find({});
+    return cats.map((cat) => cat.toJSON());
+  });
 
-  app.post('/cats', async (req, res) => {
-    await Cat.create(req.body)
-    res.status(204)
-  })
-}
+  app.post("/cats", async (req, res) => {
+    await Cat.create(req.body);
+    res.status(204);
+  });
+};
 ```
 
 Create a new file "./src/models/cat.js":
 
 ```javascript
-const mongoose = require('mongoose')
+const mongoose = require("mongoose");
 
 const schema = new mongoose.Schema({
   name: String,
-  color: String
-})
+  color: String,
+});
 
-module.exports = mongoose.model('Cat', schema)
+module.exports = mongoose.model("Cat", schema);
 ```
 
 Create a new file "./.env":
@@ -180,103 +177,103 @@ Create a new "./jest.config.js" file:
 
 ```javascript
 module.exports = {
-  testEnvironment: 'node'
-}
+  testEnvironment: "node",
+};
 ```
 
 Create a new "./src/helpers/test-utils.js":
 
 ```javascript
-const { MongoMemoryServer } = require('mongodb-memory-server')
-const mongoose = require('mongoose')
+const { MongoMemoryServer } = require("mongodb-memory-server");
+const mongoose = require("mongoose");
 
 const setupMongo = async () => {
-  const mongoServer = new MongoMemoryServer()
+  const mongoServer = new MongoMemoryServer();
   await mongoose.connect(await mongoServer.getUri(), {
     useNewUrlParser: true,
-    useUnifiedTopology: true
-  })
-  return mongoServer
-}
-const cleanMongo = async mongoServer => {
-  await mongoose.disconnect()
-  await mongoServer.stop()
-}
+    useUnifiedTopology: true,
+  });
+  return mongoServer;
+};
+const cleanMongo = async (mongoServer) => {
+  await mongoose.disconnect();
+  await mongoServer.stop();
+};
 
-module.exports = { setupMongo, cleanMongo }
+module.exports = { setupMongo, cleanMongo };
 ```
 
 Create a new "./src/routes/cat.test.js" file:
 
 ```javascript
-const app = require('fastify')()
-const { setupMongo, cleanMongo } = require('../helpers/test-utils')
-const Cat = require('../models/cat')
-const mongoose = require('mongoose')
+const app = require("fastify")();
+const { setupMongo, cleanMongo } = require("../helpers/test-utils");
+const Cat = require("../models/cat");
+const mongoose = require("mongoose");
 
-describe('/cats', () => {
-  let mongoServer
+describe("/cats", () => {
+  let mongoServer;
   beforeAll(async () => {
-    app.register(require('./cats'))
-    mongoServer = await setupMongo()
-  })
+    app.register(require("./cats"));
+    mongoServer = await setupMongo();
+  });
 
   afterAll(async () => {
-    await cleanMongo(mongoServer)
-    await app.close()
-  })
+    await cleanMongo(mongoServer);
+    await app.close();
+  });
 
-  describe('GET /cats', () => {
-    it('responds 200 and return cats', async () => {
+  describe("GET /cats", () => {
+    it("responds 200 and return cats", async () => {
       // Arrange
-      expect.assertions(2)
-      await Cat.deleteMany({})
-      await Cat.create({ name: 'Meow', color: 'dark' })
+      expect.assertions(2);
+      await Cat.deleteMany({});
+      await Cat.create({ name: "Meow", color: "dark" });
 
       // Act
       const res = await app.inject({
-        method: 'GET',
-        url: '/cats'
-      })
+        method: "GET",
+        url: "/cats",
+      });
 
       // Assert
-      expect(res.statusCode).toBe(200)
+      expect(res.statusCode).toBe(200);
       expect(res.json()).toStrictEqual([
         {
           _id: expect.any(String),
           __v: 0,
-          name: 'Meow',
-          color: 'dark'
-        }
-      ])
-    })
-  })
+          name: "Meow",
+          color: "dark",
+        },
+      ]);
+    });
+  });
 
-  describe('POST /cats', () => {
-    it('responds 204 and save cat', async () => {
+  describe("POST /cats", () => {
+    it("responds 204 and save cat", async () => {
       // Arrange
-      expect.assertions(3)
-      await Cat.deleteMany({})
+      expect.assertions(3);
+      await Cat.deleteMany({});
 
       // Act
       const res = await app.inject({
-        method: 'POST',
-        url: '/cats',
-        body: { name: 'Meow', color: 'dark' }
-      })
+        method: "POST",
+        url: "/cats",
+        body: { name: "Meow", color: "dark" },
+      });
 
       // Assert
-      expect(res.statusCode).toBe(204)
-      expect(res.body).toBe('')
-      expect((await Cat.findOne({ name: 'Meow' })).toObject()).toStrictEqual({
+      expect(res.statusCode).toBe(204);
+      expect(res.body).toBe("");
+      expect((await Cat.findOne({ name: "Meow" })).toObject()).toStrictEqual({
         _id: expect.any(mongoose.Types.ObjectId),
         __v: 0,
-        color: 'dark',
-        name: 'Meow'
-      })
-    })
-  })
-})
+        color: "dark",
+        name: "Meow",
+      });
+    });
+  });
+});
 ```
 
 ### Install Prettier code formatter
@@ -374,26 +371,26 @@ Create a new "./.github/workflows/lint.yml" file:
 ```yaml
 name: Check coding style and lint code
 
-on: ['push', 'pull_request']
+on: ["push", "pull_request"]
 
 jobs:
   lint:
     runs-on: ubuntu-18.04
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Cache node modules
-      uses: actions/cache@v1
-      env:
-        cache-name: cache-node-modules
-      with:
-        path: ./node_modules
-        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('./package-lock.json') }}
-        restore-keys: ${{ runner.os }}-build-${{ env.cache-name }}-
-    - name: Install dependencies
-      run: npm install
-    - name: Check coding style and lint code
-      run: npm run lint
+      - uses: actions/checkout@v2
+      - name: Cache node modules
+        uses: actions/cache@v1
+        env:
+          cache-name: cache-node-modules
+        with:
+          path: ./node_modules
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('./package-lock.json') }}
+          restore-keys: ${{ runner.os }}-build-${{ env.cache-name }}-
+      - name: Install dependencies
+        run: npm install
+      - name: Check coding style and lint code
+        run: npm run lint
 ```
 
 Create a new "./.github/workflows/test.yml" file:
@@ -401,27 +398,57 @@ Create a new "./.github/workflows/test.yml" file:
 ```yaml
 name: Launch unit tests & functional tests
 
-on: ['pull_request']
+on: ["pull_request"]
 
 jobs:
   test:
     runs-on: ubuntu-18.04
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Cache node modules
-      uses: actions/cache@v1
-      env:
-        cache-name: cache-node-modules
-      with:
-        path: ./node_modules
-        key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('./package-lock.json') }}
-        restore-keys: ${{ runner.os }}-build-${{ env.cache-name }}-
-    - name: Install dependencies
-      run: npm install
-    - name: Launch test with Jest
-      run: npm run test:all
+      - uses: actions/checkout@v2
+      - name: Cache node modules
+        uses: actions/cache@v1
+        env:
+          cache-name: cache-node-modules
+        with:
+          path: ./node_modules
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('./package-lock.json') }}
+          restore-keys: ${{ runner.os }}-build-${{ env.cache-name }}-
+      - name: Install dependencies
+        run: npm install
+      - name: Launch test with Jest
+        run: npm run test:all
 ```
+
+### Integrate formatter & linter to VSCode
+
+Create a new "./.vscode/extensions.json" file:
+
+```json
+{
+  "recommendations": ["dbaeumer.vscode-eslint", "esbenp.prettier-vscode"]
+}
+```
+
+This will suggest to install [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) and [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) extensions to everybody opening this project in VSCode.
+
+Then, create a new "./.vscode/settings.json" file:
+
+```json
+{
+  "eslint.enable": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  },
+  "editor.formatOnSave": true,
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "prettier.disableLanguages": ["javascript"]
+}
+```
+
+This will format automatically the code on save.
 
 ## Usage
 
