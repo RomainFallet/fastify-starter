@@ -573,10 +573,10 @@ npm run format:js
 npm run format:json
 
 # Format YAML with Prettier
-npm run lint:yml
+npm run format:yml
 
 # Format Mardkown with MarkdownLint
-npm run lint:md
+npm run format:md
 ```
 
 ### Audit & fix dependencies vulnerabilities
