@@ -55,7 +55,8 @@ Create a new "./package.json" file:
   "repository": "git@github.com:RomainFallet/fastify-starter.git",
   "scripts": {
     "start": "nodemon ./src/index.js",
-    "test": "jest",
+    "test": "jest --onlyChanged --watch",
+    "test:all": "jest --all",
     "deps:check": "npm-check",
     "deps:upgrade": "npm-check -u",
     "lint:json": "prettier --check \"./**/*.json\"",
@@ -428,11 +429,11 @@ npm start
 [Back to top ↑](#table-of-contents)
 
 ```bash
-# One-time mode
+# Test only changes since last commit in watch mode
 npm test
 
-# Watch mode
-npm test -- --watch
+# Run all test suite
+npm test:all
 ```
 
 ### Check coding style & Lint code for errors/bad practices

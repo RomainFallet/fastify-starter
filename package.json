@@ -5,7 +5,8 @@
   "repository": "git@github.com:RomainFallet/fastify-starter.git",
   "scripts": {
     "start": "nodemon ./src/index.js",
-    "test": "jest",
+    "test": "jest --onlyChanged --watch",
+    "test:all": "jest --all",
     "deps:check": "npm-check",
     "deps:upgrade": "npm-check -u",
     "lint:json": "prettier --check \"./**/*.json\"",
