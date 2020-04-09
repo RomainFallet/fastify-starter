@@ -520,12 +520,7 @@ Then, create a new "./.vscode/settings.json" file:
     "source.fixAll.markdownlint": true
   },
   "editor.formatOnSave": true,
-  "[json]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "[yaml]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
   "prettier.disableLanguages": ["javascript", "markdown"]
 }
 ```
