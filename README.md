@@ -328,18 +328,30 @@ Create a new "./.eslintrc.json" file:
 
 ```json
 {
-  "extends": ["plugin:jest/all", "standard", "prettier-standard"],
-  "plugins": ["jest"],
-  "rules": {
-    "jest/lowercase-name": [
-      "error",
-      {
-        "allowedPrefixes": ["GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS"]
+  "extends": ["standard", "prettier-standard"],
+  "overrides": [
+    {
+      "files": ["./src/**/*.test.js"],
+      "extends": "plugin:jest/all",
+      "rules": {
+        "jest/no-hooks": 0,
+        "jest/lowercase-name": [
+          "error",
+          {
+            "allowedPrefixes": [
+              "GET",
+              "POST",
+              "PATCH",
+              "PUT",
+              "DELETE",
+              "OPTIONS"
+            ]
+          }
+        ]
       }
-    ],
-    "jest/no-hooks": 0
-  }
-}
+    }
+  ],
+  "plugins": ["jest"]
 ```
 
 ### Install MarkdownLint
