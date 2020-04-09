@@ -12,8 +12,8 @@ On Windows, commands are meant to be executed on PowerShell.
 - [Quickstart](#quickstart)
 - [Manual configuration](#manual-configuration)
   - [Init the project](#init-the-project)
-  - [Install app](#install-app)
-  - [Install Jest testing utilities](#install-jest-testing-utilities)
+  - [Create default app](#create-default-app)
+  - [Install Jest & testing utilities](#install-jest--testing-utilities)
   - [Install Prettier code formatter](#install-prettier-code-formatter)
   - [Install ESLint code linter with StandardJS rules](#install-eslint-code-linter-with-standardjs-rules)
   - [Install MarkdownLint](#install-markdownlint)
@@ -97,10 +97,6 @@ Create a new "./package.json" file:
 }
 ```
 
-### Install app
-
-[Back to top ↑](#table-of-contents)
-
 Install packages:
 
 ```bash
@@ -110,6 +106,10 @@ npm install fastify@~2.13.0 axios@~0.19.0 mongodb@~3.5.0 mongoose@~5.9.0 dotenv-
 # Dev dependencies
 npm install --save-dev nodemon@~2.0.0 npm-run-all@~4.1.5
 ```
+
+### Create default app
+
+[Back to top ↑](#table-of-contents)
 
 Create a new "./src/index.js" file:
 
@@ -181,7 +181,7 @@ Create a new file "./.env":
 MONGODB_URI=mongodb://<username>:<password>@localhost:27017/<database>
 ```
 
-### Install Jest testing utilities
+### Install Jest & testing utilities
 
 [Back to top ↑](#table-of-contents)
 
