@@ -539,7 +539,7 @@ npm start
 npm test
 
 # Run all test suite
-npm test:all
+npm run test:all
 ```
 
 ### Check coding style & Lint code for errors/bad practices
