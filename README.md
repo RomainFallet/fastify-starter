@@ -456,7 +456,7 @@ jobs:
 Create a new "./.github/workflows/test.yml" file:
 
 ```yaml
-name: Launch unit tests & functional tests
+name: Launch unit tests
 
 on: ["pull_request"]
 
