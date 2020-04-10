@@ -35,7 +35,33 @@ On Windows, commands are meant to be executed on PowerShell.
 ## Quickstart
 
 ```bash
+# Clone repo
 git clone https://github.com/RomainFallet/fastify-starter
+
+# Install dependencies
+npm install
+
+# Create database (replace <dbname>)
+mongo --eval "db = db.getSiblingDB('<dbname>')"
+
+# Create a user and grant him access to the db
+# (replace <username>, <password> and <dbname>)
+mongo --eval "db.createUser(
+  {
+    user: '<username>',
+    pwd:  '<password>',
+    roles: [ { role: 'readWrite', db: '<dbname>' } ]
+  }
+)"
+
+# Load fixtures (replace <dbname>)
+mongo <dbname> --eval "$(cat ./fixtures/*)"
+```
+
+Then, copy the "./.env" file to "./.env.local" and replace variables:
+
+```text
+MONGODB_URI=mongodb://<username>:<password>@localhost:27017/<dbname>
 ```
 
 ## Manual configuration
@@ -179,6 +205,17 @@ Create a new file "./.env":
 
 ```text
 MONGODB_URI=mongodb://<username>:<password>@localhost:27017/<database>
+```
+
+Create a new "./fixtures/cat.js" file:
+
+```javascript
+/* eslint-env mongo */
+db.cats.remove({})
+db.cats.insert({
+  name: 'Kitty',
+  color: 'brown'
+})
 ```
 
 ### Install Jest & testing utilities
