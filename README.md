@@ -620,7 +620,7 @@ npm run lint:md
 [Back to top ↑](#table-of-contents)
 
 ```bash
-# Check all files
+# Format all files
 npm run format
 
 # Format JavaScript with ESLint (Prettier + StandardJS)
