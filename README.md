@@ -61,7 +61,7 @@ Create a new "./package.json" file:
   "scripts": {
     "start": "nodemon ./src/index.js",
     "test": "jest --onlyChanged --watch",
-    "test:all": "jest --all",
+    "test:all": "jest --all --passWithNoTests",
     "deps:check": "npm-check",
     "deps:upgrade": "npm-check -u",
     "lint": "npm-run-all lint:*",
