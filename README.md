@@ -9,6 +9,7 @@ On Windows, commands are meant to be executed on PowerShell.
 
 ## Table of contents
 
+- [Prerequisites](#prerequisites)
 - [Quickstart](#quickstart)
 - [Manual configuration](#manual-configuration)
   - [Init the project](#init-the-project)
@@ -31,6 +32,13 @@ On Windows, commands are meant to be executed on PowerShell.
   - [Format code automatically](#format-code-automatically)
   - [Audit & fix dependencies vulnerabilities](#audit--fix-dependencies-vulnerabilities)
   - [Check & upgrade outdated dependencies](#check--upgrade-outdated-dependencies)
+
+## Prerequisites
+
+- Git v2
+- NodeJS v12
+- NPM v6
+- MongoDB v4.2
 
 ## Quickstart
 
