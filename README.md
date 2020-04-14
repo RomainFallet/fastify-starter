@@ -24,7 +24,7 @@ On Windows, commands are meant to be executed on PowerShell.
   - [Configure .editorconfig](#configure-editorconfig)
   - [Configure CI with Git hooks](#configure-ci-with-git-hooks)
   - [Configure CI with GitHub Actions](#configure-ci-with-github-actions)
-  - [Integrate formatters, linters & syntax to VSCode](#integrate-formatter--linter-to-vscode)
+  - [Integrate formatters, linters & syntax to VSCode](#integrate-formatters-linters--syntax-to-vscode)
 - [Usage](#usage)
   - [Launch app](#launch-app)
   - [Launch unit tests](#launch-unit-tests)
