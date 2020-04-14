@@ -17,7 +17,7 @@ On Windows, commands are meant to be executed on PowerShell.
   - [Install Jest & testing utilities](#install-jest--testing-utilities)
   - [Install Prettier code formatter](#install-prettier-code-formatter)
   - [Install ESLint code linter with StandardJS rules](#install-eslint-code-linter-with-standardjs-rules)
-  - [Install MarkdownLint](#install-markdownlint)
+  - [Install MarkdownLint code linter](#install-markdownlint-code-linter)
   - [Install npm-check dependencies checker](#install-dependencies-checker)
   - [Install dotenv-flow](#install-dotenv)
   - [Configure .gitignore](#configure-gitignore)
@@ -402,7 +402,7 @@ Create a new "./.eslintrc.json" file:
   "plugins": ["jest"]
 ```
 
-### Install MarkdownLint
+### Install MarkdownLint code linter
 
 [Back to top ↑](#table-of-contents)
 
