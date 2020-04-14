@@ -46,6 +46,9 @@ On Windows, commands are meant to be executed on PowerShell.
 # Clone repo
 git clone https://github.com/RomainFallet/fastify-starter
 
+# Go inside the project
+cd ./fastify-starter
+
 # Install dependencies
 npm install
 
