@@ -5,7 +5,8 @@ const setupMongo = async () => {
   const mongoServer = new MongoMemoryServer()
   const connection = await mongoose.connect(await mongoServer.getUri(), {
     useNewUrlParser: true,
-    useUnifiedTopology: true
+    useUnifiedTopology: true,
+    serverSelectionTimeoutMS: 100
   })
   return { mongoServer, connection }
 }
