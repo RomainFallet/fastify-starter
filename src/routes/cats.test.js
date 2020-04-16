@@ -6,7 +6,7 @@ const catsRoute = require('./cats')
 const cat = require('./../../fixtures/cat')
 
 describe('/cats', () => {
-  describe('GET /cats', () => {
+  describe('method GET on /cats', () => {
     it('responds 200 and return cats', async () => {
       // Arrange
       expect.assertions(2)
@@ -38,7 +38,7 @@ describe('/cats', () => {
     })
   })
 
-  describe('POST /cats', () => {
+  describe('method POST on /cats', () => {
     it('responds 204 and save cat', async () => {
       // Arrange
       expect.assertions(3)
