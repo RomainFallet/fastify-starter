@@ -1,26 +1,18 @@
-const app = require('fastify')()
+const fastify = require('fastify')
 const { setupMongo, cleanMongo } = require('../helpers/test-utils')
 const Cat = require('../models/cat')
 const mongoose = require('mongoose')
+const catsRoute = require('./cats')
+const cat = require('./../../fixtures/cat')
 
 describe('/cats', () => {
-  let mongoServer
-  beforeAll(async () => {
-    app.register(require('./cats'))
-    mongoServer = await setupMongo()
-  })
-
-  afterAll(async () => {
-    await cleanMongo(mongoServer)
-    await app.close()
-  })
-
   describe('GET /cats', () => {
     it('responds 200 and return cats', async () => {
       // Arrange
       expect.assertions(2)
-      await Cat.deleteMany({})
-      await Cat.create({ name: 'Meow', color: 'dark' })
+      const app = fastify().register(catsRoute)
+      const { mongoServer, connection } = await setupMongo()
+      await Cat.create(cat)
 
       // Act
       const res = await app.inject({
@@ -28,14 +20,19 @@ describe('/cats', () => {
         url: '/cats'
       })
 
+      // Clean up
+      await cleanMongo({ mongoServer, connection })
+
       // Assert
       expect(res.statusCode).toBe(200)
       expect(res.json()).toStrictEqual([
         {
-          _id: expect.any(String),
-          __v: 0,
-          name: 'Meow',
-          color: 'dark'
+          _id: cat._id.toString(),
+          __v: cat.__v,
+          name: cat.name,
+          color: cat.color,
+          createdAt: cat.createdAt.toISOString(),
+          updatedAt: cat.updatedAt.toISOString()
         }
       ])
     })
@@ -45,7 +42,8 @@ describe('/cats', () => {
     it('responds 204 and save cat', async () => {
       // Arrange
       expect.assertions(3)
-      await Cat.deleteMany({})
+      const app = fastify().register(catsRoute)
+      const { mongoServer, connection } = await setupMongo()
 
       // Act
       const res = await app.inject({
@@ -53,15 +51,21 @@ describe('/cats', () => {
         url: '/cats',
         body: { name: 'Meow', color: 'dark' }
       })
+      const savedCat = (await Cat.findOne({ name: 'Meow' })).toObject()
+
+      // Clean up
+      await cleanMongo({ mongoServer, connection })
 
       // Assert
       expect(res.statusCode).toBe(204)
       expect(res.body).toBe('')
-      expect((await Cat.findOne({ name: 'Meow' })).toObject()).toStrictEqual({
+      expect(savedCat).toStrictEqual({
         _id: expect.any(mongoose.Types.ObjectId),
         __v: 0,
         color: 'dark',
-        name: 'Meow'
+        name: 'Meow',
+        createdAt: expect.any(Date),
+        updatedAt: expect.any(Date)
       })
     })
   })
