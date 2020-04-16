@@ -152,11 +152,11 @@ npm install --save-dev nodemon@~2.0.0 npm-run-all@~4.1.5 is-ci-cli@~2.0.0
 Create a new "./src/index.js" file:
 
 ```javascript
-require("dotenv-flow").config();
-const mongoose = require("mongoose");
-const app = require("fastify")({
-  logger: true,
-});
+require('dotenv-flow').config()
+const mongoose = require('mongoose')
+const app = require('fastify')({
+  logger: true
+})
 
 const start = async () => {
   try {
@@ -164,53 +164,57 @@ const start = async () => {
     await mongoose.connect(process.env.MONGODB_URI, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
-    });
+      serverSelectionTimeoutMS: 1000
+    })
 
     // Register routes
-    app.register(require("./routes/cats"));
+    app.register(require('./routes/cats'))
 
     // Start the webserver
-    await app.listen(3000);
+    await app.listen(3000)
 
-    app.log.info(`server listening on ${app.server.address().port}`);
+    app.log.info(`server listening on ${app.server.address().port}`)
   } catch (err) {
-    app.log.error(err);
-    process.exit(1);
+    app.log.error(err)
+    process.exit(1)
   }
-};
+}
 
-start();
+start()
 ```
 
 Create a new file "./src/routes/cats.js":
 
 ```javascript
-const Cat = require("../models/cat");
+const Cat = require('../models/cat')
 
-module.exports = async (app) => {
-  app.get("/cats", async () => {
-    const cats = await Cat.find({});
-    return cats.map((cat) => cat.toJSON());
-  });
+module.exports = async app => {
+  app.get('/cats', async () => {
+    const cats = await Cat.find({})
+    return cats.map(cat => cat.toJSON())
+  })
 
-  app.post("/cats", async (req, res) => {
-    await Cat.create(req.body);
-    res.status(204);
-  });
-};
+  app.post('/cats', async (req, res) => {
+    await Cat.create(req.body)
+    res.status(204)
+  })
+}
 ```
 
 Create a new file "./src/models/cat.js":
 
 ```javascript
-const mongoose = require("mongoose");
+const mongoose = require('mongoose')
 
-const schema = new mongoose.Schema({
-  name: String,
-  color: String,
-});
+const schema = new mongoose.Schema(
+  {
+    name: String,
+    color: String
+  },
+  { timestamps: true }
+)
 
-module.exports = mongoose.model("Cat", schema);
+module.exports = mongoose.model('Cat', schema)
 ```
 
 Create a new file "./.env":
@@ -223,11 +227,27 @@ Create a new "./fixtures/cat.js" file:
 
 ```javascript
 /* eslint-env mongo */
-db.cats.remove({})
-db.cats.insert({
+// eslint-disable-next-line no-global-assign
+ObjectId =
+  typeof ObjectId !== 'undefined'
+    ? ObjectId
+    : require('mongoose').Types.ObjectId
+
+const cat = {
+  _id: ObjectId('5e980b9bafdcc9eda8df1ffc'),
+  __v: 0,
   name: 'Kitty',
-  color: 'brown'
-})
+  color: 'brown',
+  createdAt: new Date('2020-04-16T08:57:33.198Z'),
+  updatedAt: new Date('2020-04-16T08:57:33.198Z')
+}
+
+if (typeof db !== 'undefined') {
+  db.cats.remove({})
+  db.cats.insert(cat)
+}
+
+module.exports = cat
 ```
 
 ### Install Jest & testing utilities
@@ -245,102 +265,106 @@ Create a new "./jest.config.js" file:
 ```javascript
 module.exports = {
   testEnvironment: "node",
-};
+}
 ```
 
 Create a new "./src/helpers/test-utils.js":
 
 ```javascript
-const { MongoMemoryServer } = require("mongodb-memory-server");
-const mongoose = require("mongoose");
+const { MongoMemoryServer } = require('mongodb-memory-server')
+const mongoose = require('mongoose')
 
 const setupMongo = async () => {
-  const mongoServer = new MongoMemoryServer();
-  await mongoose.connect(await mongoServer.getUri(), {
+  const mongoServer = new MongoMemoryServer({ autoStart: false })
+  const connection = await mongoose.connect(await mongoServer.getUri(), {
     useNewUrlParser: true,
-    useUnifiedTopology: true,
-  });
-  return mongoServer;
-};
-const cleanMongo = async (mongoServer) => {
-  await mongoose.disconnect();
-  await mongoServer.stop();
-};
+    useUnifiedTopology: true
+  })
+  return { mongoServer, connection }
+}
+const cleanMongo = async ({ mongoServer, connection }) => {
+  await mongoServer.stop()
+  await connection.disconnect()
+}
 
-module.exports = { setupMongo, cleanMongo };
+module.exports = { setupMongo, cleanMongo }
 ```
 
 Create a new "./src/routes/cat.test.js" file:
 
 ```javascript
-const app = require("fastify")();
-const { setupMongo, cleanMongo } = require("../helpers/test-utils");
-const Cat = require("../models/cat");
-const mongoose = require("mongoose");
+const fastify = require('fastify')
+const { setupMongo, cleanMongo } = require('../helpers/test-utils')
+const Cat = require('../models/cat')
+const mongoose = require('mongoose')
+const catsRoute = require('./cats')
+const cat = require('./../../fixtures/cat')
 
-describe("/cats", () => {
-  let mongoServer;
-  beforeAll(async () => {
-    app.register(require("./cats"));
-    mongoServer = await setupMongo();
-  });
-
-  afterAll(async () => {
-    await cleanMongo(mongoServer);
-    await app.close();
-  });
-
-  describe("GET /cats", () => {
-    it("responds 200 and return cats", async () => {
+describe('/cats', () => {
+  describe('GET /cats', () => {
+    it('responds 200 and return cats', async () => {
       // Arrange
-      expect.assertions(2);
-      await Cat.deleteMany({});
-      await Cat.create({ name: "Meow", color: "dark" });
+      expect.assertions(2)
+      const app = fastify().register(catsRoute)
+      const { mongoServer, connection } = await setupMongo()
+      await Cat.create(cat)
 
       // Act
       const res = await app.inject({
-        method: "GET",
-        url: "/cats",
-      });
+        method: 'GET',
+        url: '/cats'
+      })
+
+      // Clean up
+      await cleanMongo({ mongoServer, connection })
 
       // Assert
-      expect(res.statusCode).toBe(200);
+      expect(res.statusCode).toBe(200)
       expect(res.json()).toStrictEqual([
         {
-          _id: expect.any(String),
-          __v: 0,
-          name: "Meow",
-          color: "dark",
-        },
-      ]);
-    });
-  });
+          _id: cat._id.toString(),
+          __v: cat.__v,
+          name: cat.name,
+          color: cat.color,
+          createdAt: cat.createdAt.toISOString(),
+          updatedAt: cat.updatedAt.toISOString()
+        }
+      ])
+    })
+  })
 
-  describe("POST /cats", () => {
-    it("responds 204 and save cat", async () => {
+  describe('POST /cats', () => {
+    it('responds 204 and save cat', async () => {
       // Arrange
-      expect.assertions(3);
-      await Cat.deleteMany({});
+      expect.assertions(3)
+      const app = fastify().register(catsRoute)
+      const { mongoServer, connection } = await setupMongo()
 
       // Act
       const res = await app.inject({
-        method: "POST",
-        url: "/cats",
-        body: { name: "Meow", color: "dark" },
-      });
+        method: 'POST',
+        url: '/cats',
+        body: { name: 'Meow', color: 'dark' }
+      })
+      const savedCat = (await Cat.findOne({ name: 'Meow' })).toObject()
+
+      // Clean up
+      await cleanMongo({ mongoServer, connection })
 
       // Assert
-      expect(res.statusCode).toBe(204);
-      expect(res.body).toBe("");
-      expect((await Cat.findOne({ name: "Meow" })).toObject()).toStrictEqual({
+      expect(res.statusCode).toBe(204)
+      expect(res.body).toBe('')
+      expect(savedCat).toStrictEqual({
         _id: expect.any(mongoose.Types.ObjectId),
         __v: 0,
-        color: "dark",
-        name: "Meow",
-      });
-    });
-  });
-});
+        color: 'dark',
+        name: 'Meow',
+        createdAt: expect.any(Date),
+        updatedAt: expect.any(Date)
+      })
+    })
+  })
+})
 ```
 
 ### Install Prettier code formatter
