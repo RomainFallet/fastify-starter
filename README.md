@@ -405,23 +405,7 @@ Create a new "./.eslintrc.json" file:
   "overrides": [
     {
       "files": ["./src/**/*.test.js"],
-      "extends": "plugin:jest/all",
-      "rules": {
-        "jest/no-hooks": 0,
-        "jest/lowercase-name": [
-          "error",
-          {
-            "allowedPrefixes": [
-              "GET",
-              "POST",
-              "PATCH",
-              "PUT",
-              "DELETE",
-              "OPTIONS"
-            ]
-          }
-        ]
-      }
+      "extends": "plugin:jest/all"
     }
   ],
   "plugins": ["jest"]
