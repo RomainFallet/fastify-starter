@@ -9,7 +9,8 @@ const start = async () => {
     // Connect to the database
     await mongoose.connect(process.env.MONGODB_URI, {
       useNewUrlParser: true,
-      useUnifiedTopology: true
+      useUnifiedTopology: true,
+      serverSelectionTimeoutMS: 1000
     })
 
     // Register routes
