@@ -3,15 +3,15 @@ const mongoose = require('mongoose')
 
 const setupMongo = async () => {
   const mongoServer = new MongoMemoryServer()
-  await mongoose.connect(await mongoServer.getUri(), {
+  const connection = await mongoose.connect(await mongoServer.getUri(), {
     useNewUrlParser: true,
     useUnifiedTopology: true
   })
-  return mongoServer
+  return { mongoServer, connection }
 }
-const cleanMongo = async mongoServer => {
-  await mongoose.disconnect()
+const cleanMongo = async ({ mongoServer, connection }) => {
   await mongoServer.stop()
+  await connection.disconnect()
 }
 
 module.exports = { setupMongo, cleanMongo }
