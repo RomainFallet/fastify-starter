@@ -97,8 +97,9 @@ Create a new "./package.json" file:
   "repository": "git@github.com:RomainFallet/fastify-starter.git",
   "scripts": {
     "start": "nodemon ./src/index.js",
-    "test": "jest --onlyChanged --watch",
-    "test:all": "jest --all --passWithNoTests",
+    "test": "is-ci test:all test:watch",
+    "test:watch": "jest --watch",
+    "test:all": "jest --passWithNoTests",
     "deps:check": "npm-check",
     "deps:upgrade": "npm-check -u",
     "lint": "npm-run-all lint:*",
@@ -141,7 +142,7 @@ Install packages:
 npm install fastify@~2.13.0 axios@~0.19.0 mongodb@~3.5.0 mongoose@~5.9.0 dotenv-flow@~3.1.0
 
 # Dev dependencies
-npm install --save-dev nodemon@~2.0.0 npm-run-all@~4.1.5
+npm install --save-dev nodemon@~2.0.0 npm-run-all@~4.1.5 is-ci-cli@~2.0.0
 ```
 
 ### Create default app
@@ -525,7 +526,7 @@ jobs:
       - name: Install dependencies
         run: npm install
       - name: Launch test with Jest
-        run: npm run test:all
+        run: npm test
 ```
 
 ### Integrate formatters, linters & syntax to VSCode
