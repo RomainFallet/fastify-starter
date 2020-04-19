@@ -81,7 +81,7 @@ MONGODB_URI=mongodb://<username>:<password>@localhost:27017/<dbname>
 
 [Back to top ↑](#table-of-contents)
 
-Create a new "./npmrc" file:
+Create a new "./.npmrc" file:
 
 ```text
 save-prefix='~'
