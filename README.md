@@ -69,7 +69,7 @@ mongo --eval "db.createUser(
 mongo <dbname> --eval "$(cat ./fixtures/*)"
 ```
 
-Then, copy the "./.env" file to "./.env.local" and replace variables:
+Then, copy the `./.env` file to `./.env.local` and replace variables:
 
 ```text
 MONGODB_URI=mongodb://<username>:<password>@localhost:27017/<dbname>
@@ -81,13 +81,13 @@ MONGODB_URI=mongodb://<username>:<password>@localhost:27017/<dbname>
 
 [Back to top ↑](#table-of-contents)
 
-Create a new "./.npmrc" file:
+Create a new `./.npmrc` file:
 
 ```text
 save-prefix='~'
 ```
 
-Create a new "./package.json" file:
+Create a new `./package.json` file:
 
 ```json
 {
@@ -149,7 +149,7 @@ npm install --save-dev nodemon@~2.0.0 npm-run-all@~4.1.5 is-ci-cli@~2.0.0
 
 [Back to top ↑](#table-of-contents)
 
-Create a new "./src/index.js" file:
+Create a new `./src/index.js` file:
 
 ```javascript
 require('dotenv-flow').config()
@@ -183,7 +183,7 @@ const start = async () => {
 start()
 ```
 
-Create a new file "./src/routes/cats.js":
+Create a new file `./src/routes/cats.js`:
 
 ```javascript
 const Cat = require('../models/cat')
@@ -201,7 +201,7 @@ module.exports = async app => {
 }
 ```
 
-Create a new file "./src/models/cat.js":
+Create a new file `./src/models/cat.js`:
 
 ```javascript
 const mongoose = require('mongoose')
@@ -217,13 +217,13 @@ const schema = new mongoose.Schema(
 module.exports = mongoose.model('Cat', schema)
 ```
 
-Create a new file "./.env":
+Create a new file `./.env`:
 
 ```text
 MONGODB_URI=mongodb://<username>:<password>@localhost:27017/<database>
 ```
 
-Create a new "./fixtures/cat.js" file:
+Create a new `./fixtures/cat.js` file:
 
 ```javascript
 /* eslint-env mongo */
@@ -260,7 +260,7 @@ Install packages:
 npm install --save-dev jest@~25.2.0 axios-mock-adapter@~1.18.0 mongodb-memory-server@~6.5.0
 ```
 
-Create a new "./jest.config.js" file:
+Create a new `./jest.config.js` file:
 
 ```javascript
 module.exports = {
@@ -268,7 +268,7 @@ module.exports = {
 }
 ```
 
-Create a new "./src/helpers/test-utils.js":
+Create a new `./src/helpers/test-utils.js`:
 
 ```javascript
 const { MongoMemoryServer } = require('mongodb-memory-server')
@@ -291,7 +291,7 @@ const cleanMongo = async ({ mongoServer, connection }) => {
 module.exports = { setupMongo, cleanMongo }
 ```
 
-Create a new "./src/routes/cat.test.js" file:
+Create a new `./src/routes/cat.test.js` file:
 
 ```javascript
 const fastify = require('fastify')
@@ -398,7 +398,7 @@ npm i -D eslint-plugin-standard@~4.0.0 eslint-plugin-jest@~23.8.0
 npm i -D eslint-config-standard@~14.1.0
 ```
 
-Create a new "./.eslintrc.json" file:
+Create a new `./.eslintrc.json` file:
 
 ```json
 {
@@ -420,7 +420,7 @@ Create a new "./.eslintrc.json" file:
 npm install --save-dev markdownlint@~0.19.0 markdownlint-cli@~0.22.0
 ```
 
-Create a new "./.markdownlint.json" file:
+Create a new `./.markdownlint.json` file:
 
 ```json
 {
@@ -440,7 +440,7 @@ npm install --save-dev npm-check@~5.9.0
 
 [Back to top ↑](#table-of-contents)
 
-Create a new "./.gitignore" file:
+Create a new `./.gitignore` file:
 
 ```bash
 # OS Specific
@@ -457,7 +457,7 @@ node_modules
 
 [Back to top ↑](#table-of-contents)
 
-Create a new "./.editorconfig " file:
+Create a new `./.editorconfig` file:
 
 ```bash
 # EditorConfig is awesome: https://EditorConfig.org
@@ -484,7 +484,7 @@ npm install --save-dev husky@~4.2.0 lint-staged@~10.1.0
 
 [Back to top ↑](#table-of-contents)
 
-Create a new "./.github/workflows/lint.yml" file:
+Create a new `./.github/workflows/lint.yml` file:
 
 ```yaml
 name: Check coding style and lint code
@@ -511,7 +511,7 @@ jobs:
         run: npm run lint
 ```
 
-Create a new "./.github/workflows/test.yml" file:
+Create a new `./.github/workflows/test.yml` file:
 
 ```yaml
 name: Launch unit tests
@@ -542,7 +542,7 @@ jobs:
 
 [Back to top ↑](#table-of-contents)
 
-Create a new "./.vscode/extensions.json" file:
+Create a new `./.vscode/extensions.json` file:
 
 ```json
 {
@@ -568,7 +568,7 @@ This will suggest to install
 and [EditorConfig](https://marketplace.visualstudio.com/items?itemName=EditorConfig.EditorConfig)
 extensions to everybody opening this project in VSCode.
 
-Then, create a new "./.vscode/settings.json" file:
+Then, create a new `./.vscode/settings.json` file:
 
 ```json
 {
