@@ -81,10 +81,10 @@ MONGODB_URI=mongodb://<username>:<password>@localhost:27017/<dbname>
 
 [Back to top ↑](#table-of-contents)
 
-Define npm prefix:
+Create a new "./.npmrc" file:
 
-```bash
-npm config set save-prefix='~'
+```text
+save-prefix='~'
 ```
 
 Create a new "./package.json" file:
