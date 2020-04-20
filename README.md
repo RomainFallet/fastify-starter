@@ -3,9 +3,7 @@
 The purpose of this repository is to provide instructions to create
 and configure a new [Fastify](https://www.fastify.io/) app from scratch
 with appropriate linters, editor config, testing utilities,
-continuous integration on Ubuntu, macOS and Windows.
-
-On Windows, commands are meant to be executed on PowerShell.
+continuous integration.
 
 ## Table of contents
 
