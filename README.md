@@ -408,6 +408,7 @@ Create a new `./.eslintrc.json` file:
     }
   ],
   "plugins": ["jest"]
+}
 ```
 
 ### Install MarkdownLint code linter
